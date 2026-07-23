@@ -11,6 +11,7 @@
   var dropZone     = document.getElementById('dropZone');
   var uploader     = document.getElementById('uploader');
   var contentBody  = document.getElementById('contentBody');
+  var articleContent = document.getElementById('articleContent');  // 滚动容器
   var chapterHeading = document.getElementById('chapterHeading');
   var chapterNav   = document.getElementById('chapterNav');
   var prevBtn      = document.getElementById('prevBtn');
@@ -32,6 +33,7 @@
     tocItems: {},       // id -> <li>
     currentId: null     // 当前展示的章节/简介 id
   };
+  var rawText = null;   // 保留原始解码后文本，用于持久化
 
   /* ===================== 文件读取（自动识别编码） ===================== */
 
@@ -102,7 +104,8 @@
 
   /* ===================== 渲染主流程 ===================== */
 
-  function render(text, fileName) {
+  function render(text, fileName, restoreId) {
+    rawText = text;
     var result = window.TxtParser.parse(text);
 
     // 章节标题清理
@@ -121,14 +124,23 @@
     renderToc();
     uploader.style.display = 'none';
 
-    // 初始展示：有简介先展示简介，否则展示第一章
-    if (state.preface.length) {
+    // 恢复上次位置 / 或初始展示
+    if (restoreId === PREFACE_ID) {
+      showPreface();
+    } else if (restoreId && restoreId.indexOf('chapter-') === 0) {
+      var idx = parseInt(restoreId.replace('chapter-', ''), 10);
+      if (idx >= 0 && idx < state.chapters.length) showChapter(idx);
+      else showChapter(0);
+    } else if (state.preface.length) {
       showPreface();
     } else if (state.chapters.length) {
       showChapter(0);
     } else {
       showEmpty();
     }
+
+    // 保存到 localStorage
+    saveState(fileName);
   }
 
   /* ===================== 目录 ===================== */
@@ -247,7 +259,7 @@
   }
 
   function scrollMainTop() {
-    colMain.scrollTo({ top: 0, behavior: 'auto' });
+    articleContent.scrollTo({ top: 0, behavior: 'auto' });
   }
 
   function scrollTocIntoView(li) {
@@ -312,6 +324,108 @@
   tocReopen.addEventListener('click', function () {
     container.classList.remove('right-collapsed');
   });
+
+  /* ===================== 本地缓存（IndexedDB） ===================== */
+
+  var DB_NAME = 'csdn_txt_reader';
+  var DB_STORE = 'state';
+  var DB_KEY = 'reading';
+  var db = null;
+
+  /**
+   * 打开/初始化 IndexedDB
+   */
+  function openDB(cb) {
+    if (db) { cb(db); return; }
+    var req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = function (e) {
+      var d = e.target.result;
+      if (!d.objectStoreNames.contains(DB_STORE)) {
+        d.createObjectStore(DB_STORE);
+      }
+    };
+    req.onsuccess = function (e) { db = e.target.result; cb(db); };
+    req.onerror = function () { cb(null); };
+  }
+
+  /**
+   * 保存当前阅读状态
+   */
+  function saveState(fileName) {
+    openDB(function (d) {
+      if (!d) return;
+      try {
+        var tx = d.transaction(DB_STORE, 'readwrite');
+        var store = tx.objectStore(DB_STORE);
+        store.put({
+          fileName: fileName || '',
+          currentId: state.currentId,
+          scrollTop: articleContent.scrollTop,
+          text: rawText
+        }, DB_KEY);
+      } catch (e) {}
+    });
+  }
+
+  /**
+   * 每次切换章节/滚动时，自动保存进度（增量更新，不重写 text）
+   */
+  function autoSave() {
+    if (!rawText) return;
+    openDB(function (d) {
+      if (!d) return;
+      try {
+        var tx = d.transaction(DB_STORE, 'readwrite');
+        var store = tx.objectStore(DB_STORE);
+        var getReq = store.get(DB_KEY);
+        getReq.onsuccess = function () {
+          var saved = getReq.result || {};
+          saved.currentId = state.currentId;
+          saved.scrollTop = articleContent.scrollTop;
+          store.put(saved, DB_KEY);
+        };
+      } catch (e) {}
+    });
+  }
+
+  // 切章节时自动保存
+  var _origSetActive = setActive;
+  setActive = function (id) {
+    _origSetActive(id);
+    setTimeout(autoSave, 50);
+  };
+
+  // 滚动停止后保存（防抖 800ms）
+  var _scrollTimer = null;
+  articleContent.addEventListener('scroll', function () {
+    clearTimeout(_scrollTimer);
+    _scrollTimer = setTimeout(autoSave, 800);
+  });
+
+  /**
+   * 页面加载时尝试恢复上次的阅读
+   */
+  function tryRestore() {
+    openDB(function (d) {
+      if (!d) return;
+      try {
+        var tx = d.transaction(DB_STORE, 'readonly');
+        var store = tx.objectStore(DB_STORE);
+        var getReq = store.get(DB_KEY);
+        getReq.onsuccess = function () {
+          var data = getReq.result;
+          if (!data || !data.text) return;
+          render(data.text, data.fileName || '', data.currentId);
+          if (typeof data.scrollTop === 'number') {
+            setTimeout(function () { articleContent.scrollTo(0, data.scrollTop); }, 80);
+          }
+        };
+      } catch (e) {}
+    });
+  }
+
+  // 页面打开时自动恢复
+  tryRestore();
 
   /* ===================== 工具函数 ===================== */
 
