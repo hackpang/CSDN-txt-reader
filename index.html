@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <title>AI周报（2026年7月第3周）：WAIC产业发布、Kimi K3开源、AI工具供应链警钟 - CSDN 博客</title>
+  <link rel="stylesheet" href="css/style.css?v=4">
+</head>
+<body>
+  <!-- ===================== 顶部导航栏（静态，仿 CSDN） ===================== -->
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="nav-logo" href="javascript:void(0)" aria-label="CSDN">
+        <span class="nav-logo-c">C</span><span class="nav-logo-t">SDN</span>
+      </a>
+      <span class="nav-cat"><span class="nav-cat-ico">☰</span>全部</span>
+      <nav class="nav-menu">
+        <a class="active" href="javascript:void(0)">博客</a>
+        <a href="javascript:void(0)">下载</a>
+        <a href="javascript:void(0)">社区</a>
+        <a href="javascript:void(0)">AtomGit</a>
+        <a href="javascript:void(0)">模型市场</a>
+        <a href="javascript:void(0)">更多▾</a>
+      </nav>
+      <div class="nav-search">
+        <input type="text" placeholder="搜CSDN" disabled>
+        <button type="button" class="nav-search-btn"><span class="nav-search-ico">🔍</span>搜索</button>
+      </div>
+      <div class="nav-right">
+        <a class="nav-vip" href="javascript:void(0)"><span class="nav-vip-crown">👑</span>会员</a>
+        <a class="nav-bell" href="javascript:void(0)" title="消息">🔔<i class="nav-badge">3</i></a>
+        <button class="nav-create" type="button">创作<span class="nav-create-arrow">▾</span></button>
+        <span class="nav-avatar"><i class="nav-avatar-lv">Lv6</i></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== 主体三栏布局 ===================== -->
+  <div class="container" id="container">
+
+    <!-- ---------- 左侧栏（仿 CSDN 作者/广告/热门/专栏） ---------- -->
+    <aside class="col-left" id="colLeft">
+      <!-- 作者卡片 -->
+      <div class="card author-card">
+        <div class="author-head">
+          <div class="author-avatar">🐒</div>
+          <div class="author-info">
+            <div class="author-name">萧青山</div>
+            <div class="author-badges">
+              <span class="badge badge--level">🏆 博客等级</span>
+              <span class="badge badge--age">码龄10年</span>
+            </div>
+          </div>
+        </div>
+        <div class="author-stats">
+          <div class="stat"><b>44</b><span>原创</span></div>
+          <div class="stat"><b>610</b><span>点赞</span></div>
+          <div class="stat"><b>373</b><span>收藏</span></div>
+          <div class="stat"><b>95</b><span>粉丝</span></div>
+        </div>
+        <div class="author-actions">
+          <button class="btn btn--primary" type="button">+ 关注</button>
+          <button class="btn btn--ghost" type="button">私信</button>
+        </div>
+      </div>
+
+      <!-- 广告位 -->
+      <div class="card ad-card">
+        <div class="ad-tag">InfiniSynapse × CSDN</div>
+        <div class="ad-title">首届 Vibe Coding<br>泛数据分析应用开发大赛</div>
+        <div class="ad-sub">让 Data Infra 创造无限可能</div>
+        <div class="ad-illust">🚀 📊 💡</div>
+        <div class="ad-cta">立即报名 · 奖金池 500 万</div>
+      </div>
+
+      <!-- 热门文章 -->
+      <div class="card list-card">
+        <div class="card-title">热门文章</div>
+        <ul class="side-list">
+          <li>
+            <a href="javascript:void(0)">MCP Server安全加固：GB/Z 185视角下的四层纵深防御架构（Python实现）</a>
+            <span class="side-list-cnt">👁 1272</span>
+          </li>
+          <li>
+            <a href="javascript:void(0)">公文段落标题分类器实战：28维XGBoost实现标题层级识别（F1=0.99+）</a>
+            <span class="side-list-cnt">👁 1120</span>
+          </li>
+          <li>
+            <a href="javascript:void(0)">GB/Z 185《人工智能 智能体互联》系列标准核心内容梳理</a>
+            <span class="side-list-cnt">👁 1051</span>
+          </li>
+          <li>
+            <a class="active" href="javascript:void(0)">AI周报（2026年7月第3周）：WAIC产业发布、Kimi K3开源、AI工具供应链警钟</a>
+            <span class="side-list-cnt">👁 1079</span>
+          </li>
+          <li>
+            <a href="javascript:void(0)">GBrain技术深度解析：知识图谱+混合检索的AI第二大脑（本地部署+架构拆解+与 OpenSPG_GraphRAG对比）</a>
+            <span class="side-list-cnt">👁 1023</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- 分类专栏 -->
+      <div class="card list-card">
+        <div class="card-title">分类专栏</div>
+        <ul class="col-list">
+          <li><span class="col-ico" style="background:#e8f4ff;color:#3d8dff">📘</span><span class="col-name">GB/Z 185智能体合规落地</span><span class="col-cnt">16篇</span></li>
+          <li><span class="col-ico" style="background:#fff3e0;color:#ff8f3d">📗</span><span class="col-name">高校信创实战</span><span class="col-cnt">1篇</span></li>
+          <li><span class="col-ico" style="background:#e8ffee;color:#3fb453">📕</span><span class="col-name">AI周报</span><span class="col-cnt">12篇</span></li>
+          <li><span class="col-ico" style="background:#f3e8ff;color:#8b5cf6">📓</span><span class="col-name">AI编程社区</span><span class="col-cnt">8篇</span></li>
+          <li><span class="col-ico" style="background:#ffe8ec;color:#ff4d6d">📔</span><span class="col-name">大模型工程化实战</span><span class="col-cnt">6篇</span></li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- ---------- 中间正文区（唯一可滚动） ---------- -->
+    <section class="col-main" id="colMain">
+      <article class="article-card">
+        <h1 class="article-title">AI周报（2026年7月第3周）：WAIC产业发布、Kimi K3开源、AI工具供应链警钟</h1>
+
+        <div class="article-meta">
+          <span class="meta-badge">原创</span>
+          <span class="meta-item">已于 <b>2026-07-18 10:56:48</b> 修改</span>
+          <span class="meta-dot">·</span>
+          <span class="meta-item">阅读量 <b>1k</b></span>
+          <span class="meta-dot">·</span>
+          <span class="meta-item">👍 <b>15</b></span>
+          <span class="meta-dot">·</span>
+          <span class="meta-item">⭐ <b>10</b></span>
+          <span class="meta-cc">本内容遵循CC 4.0 BY-SA</span>
+        </div>
+
+        <div class="article-tags">
+          <span class="tag-label">收录于</span>
+          <span class="tag tag--column">📘 AI周报</span>
+          <span class="tag tag--column">📗 AI编程社区</span>
+          <span class="tag-label">话题</span>
+          <span class="tag tag--topic">#暑假·七月创作之星博客挑战赛</span>
+        </div>
+
+        <!-- 专栏推广条 -->
+        <div class="promo-band">
+          <div class="promo-title">AI 时代程序员必备技能</div>
+          <div class="promo-sub">Codex、Claude Code、Cursor、Hermes Agent、OpenClaw 等工程化实战专栏，讲透 AI 编程</div>
+        </div>
+
+        <!-- ===== 唯一自定义区域：正文框 ===== -->
+        <div class="article-content" id="articleContent">
+          <!-- 上传区（无内容时显示） -->
+          <div class="uploader" id="uploader">
+            <div class="uploader-inner" id="dropZone">
+              <div class="uploader-icon">📄</div>
+              <div class="uploader-text">点击选择，或拖拽 TXT 文件到此处</div>
+              <div class="uploader-hint">自动识别「第X章 / 第X节」章节，支持 UTF-8 / GBK 编码</div>
+              <input type="file" id="fileInput" accept=".txt,text/plain" hidden>
+              <button class="uploader-btn" type="button" id="pickBtn">选择文件</button>
+            </div>
+          </div>
+
+          <!-- 当前章节标题（单章模式） -->
+          <h2 class="chapter-heading" id="chapterHeading" style="display:none"></h2>
+          <!-- 正文（单章内容 / 简介） -->
+          <div class="content-body" id="contentBody"></div>
+
+          <!-- 上一章 / 下一章 -->
+          <div class="chapter-nav" id="chapterNav" style="display:none">
+            <button class="chapter-nav-btn" id="prevBtn" type="button">← 上一章</button>
+            <span class="chapter-nav-pos" id="chapterPos"></span>
+            <button class="chapter-nav-btn" id="nextBtn" type="button">下一章 →</button>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- ---------- 右侧栏：目录 / CSDN 风格卡片（两种模式切换） ---------- -->
+    <aside class="col-right" id="colRight">
+      <!-- 模式 A：目录（默认） -->
+      <div class="toc-card">
+        <div class="toc-head">
+          <span class="toc-title">目录</span>
+          <span class="toc-count" id="tocCount"></span>
+          <button class="toc-toggle" id="tocToggle" type="button" title="收起目录">⟩</button>
+        </div>
+        <div class="toc-search">
+          <input type="text" id="tocSearch" placeholder="搜索章节" autocomplete="off">
+          <span class="toc-search-ico">🔍</span>
+        </div>
+        <ul class="toc-list" id="tocList">
+          <li class="toc-empty">上传文件后显示章节目录</li>
+        </ul>
+      </div>
+
+      <!-- 模式 B：收起后的 CSDN 风格卡片栈 -->
+      <div class="right-csdn" id="rightCsdn">
+        <!-- 回到目录 -->
+        <button class="toc-quickopen" id="tocReopen" type="button">📑 展开目录</button>
+
+        <!-- CSDN 客户端 GO -->
+        <div class="card go-card">
+          <div class="go-body">
+            <div class="go-text">
+              <div class="go-title">CSDN 客户端</div>
+              <div class="go-sub">扫码下载 · 随时阅读</div>
+            </div>
+            <div class="go-qr">📱</div>
+          </div>
+          <div class="go-cta">GO ›</div>
+        </div>
+
+        <!-- 相关推荐 -->
+        <div class="card list-card">
+          <div class="card-title">相关推荐</div>
+          <ul class="side-list">
+            <li><a href="javascript:void(0)">WAIC 2026 开幕：300+ AI 产品首发，三地四馆全景回顾</a><span class="side-list-cnt">👁 2.1k</span></li>
+            <li><a href="javascript:void(0)">Kimi K3 开源测评：2.8万亿参数背后的工程权衡</a><span class="side-list-cnt">👁 1.8k</span></li>
+            <li><a href="javascript:void(0)">Claude Code 供应链安全事件：完整时间线与应对方案</a><span class="side-list-cnt">👁 1.5k</span></li>
+            <li><a href="javascript:void(0)">J-space 论文考：AI 可解释性的新进展</a><span class="side-list-cnt">👁 1.3k</span></li>
+            <li><a href="javascript:void(0)">国产大模型教学选型对比（含 4 款现行方案）</a><span class="side-list-cnt">👁 1.1k</span></li>
+          </ul>
+        </div>
+
+        <!-- 学习路线 -->
+        <div class="card list-card">
+          <div class="card-title">学习路线<a class="card-more" href="javascript:void(0)">更多 ›</a></div>
+          <ul class="path-list">
+            <li><span class="path-ico" style="background:#e8f4ff;color:#3d8dff">🤖</span><span class="path-name">AI 大模型学习路线</span></li>
+            <li><span class="path-ico" style="background:#fff3e0;color:#ff8f3d">🐍</span><span class="path-name">Python 入门到实战</span></li>
+            <li><span class="path-ico" style="background:#e8ffee;color:#3fb453">⚙️</span><span class="path-name">Java 后端开发</span></li>
+            <li><span class="path-ico" style="background:#f3e8ff;color:#8b5cf6">🎨</span><span class="path-name">前端工程化实践</span></li>
+          </ul>
+        </div>
+
+        <!-- 登录送权益 -->
+        <div class="card login-card">
+          <div class="login-title">登录后您可以享受以下权益：</div>
+          <div class="perk-grid">
+            <div class="perk"><span class="perk-ico">📄</span>免费复制代码</div>
+            <div class="perk"><span class="perk-ico">💬</span>和博主大 V 互动</div>
+            <div class="perk"><span class="perk-ico">📥</span>下载海量资源</div>
+            <div class="perk"><span class="perk-ico">✍️</span>发动态 / 写文章</div>
+          </div>
+          <button class="btn btn--primary login-btn" type="button">立即登录</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script src="js/parser.js?v=4"></script>
+  <script src="js/app.js?v=4"></script>
+</body>
+</html>
