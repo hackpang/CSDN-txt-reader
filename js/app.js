@@ -12,6 +12,8 @@
   var uploader     = document.getElementById('uploader');
   var contentBody  = document.getElementById('contentBody');
   var articleContent = document.getElementById('articleContent');  // 滚动容器
+  var originalArticle = document.getElementById('originalArticle');
+  var modeSwitch   = document.getElementById('modeSwitch');
   var chapterHeading = document.getElementById('chapterHeading');
   var chapterNav   = document.getElementById('chapterNav');
   var prevBtn      = document.getElementById('prevBtn');
@@ -22,6 +24,7 @@
   var tocCount     = document.getElementById('tocCount');
   var tocSearch    = document.getElementById('tocSearch');
   var tocToggle    = document.getElementById('tocToggle');
+  var reimportBtn  = document.getElementById('reimportBtn');
   var tocReopen    = document.getElementById('tocReopen');
   var container    = document.getElementById('container');
 
@@ -45,6 +48,14 @@
   fileInput.addEventListener('change', function () {
     if (fileInput.files && fileInput.files[0]) handleFile(fileInput.files[0]);
   });
+
+  // 目录栏「重新导入」：换一个 txt（清空 value 以允许重选同名文件）
+  if (reimportBtn) {
+    reimportBtn.addEventListener('click', function () {
+      fileInput.value = '';
+      fileInput.click();
+    });
+  }
 
   ['dragenter', 'dragover'].forEach(function (ev) {
     dropZone.addEventListener(ev, function (e) {
@@ -124,6 +135,12 @@
     renderToc();
     uploader.style.display = 'none';
 
+    // 重新导入时重置为 TXT 阅读态（退出可能的原文模式）
+    isOriginalMode = false;
+    if (originalArticle) originalArticle.style.display = 'none';
+    if (modeSwitch) modeSwitch.classList.remove('tag--switch-active');
+    contentBody.style.display = '';
+
     // 恢复上次位置 / 或初始展示
     if (restoreId === PREFACE_ID) {
       showPreface();
@@ -170,7 +187,10 @@
 
     state.chapters.forEach(function (ch) {
       var li = makeTocItem(ch.id, ch.title, '');
-      li.addEventListener('click', function () { showChapter(ch.index); });
+      li.addEventListener('click', function () {
+        if (isOriginalMode) showTxt();
+        showChapter(ch.index);
+      });
       tocList.appendChild(li);
       state.tocItems[ch.id] = li;
     });
@@ -316,6 +336,78 @@
       escapeHtml(text.slice(idx + kw.length));
   }
 
+  /* ===================== 原文 / TXT 一键切换 ===================== */
+
+  var isOriginalMode = false;
+  var txtScrollTop = 0;        // 记忆 TXT 视图的滚动位置
+  var originalScrollTop = 0;   // 记忆原文视图的滚动位置
+
+  function showOriginal() {
+    // 切换前记住当前 TXT 阅读位置
+    txtScrollTop = articleContent.scrollTop;
+    isOriginalMode = true;
+    // 填充静态原文（仅首次）
+    if (!originalArticle.innerHTML && window.ORIGINAL_ARTICLE_HTML) {
+      originalArticle.innerHTML = window.ORIGINAL_ARTICLE_HTML;
+    }
+    uploader.style.display = 'none';
+    chapterHeading.style.display = 'none';
+    contentBody.style.display = 'none';
+    chapterNav.style.display = 'none';
+    originalArticle.style.display = 'block';
+    modeSwitch.classList.add('tag--switch-active');
+    // 恢复原文上次阅读位置
+    articleContent.scrollTop = originalScrollTop;
+  }
+
+  function showTxt() {
+    // 切换前记住当前原文阅读位置
+    if (isOriginalMode) originalScrollTop = articleContent.scrollTop;
+    isOriginalMode = false;
+    originalArticle.style.display = 'none';
+    contentBody.style.display = '';
+    modeSwitch.classList.remove('tag--switch-active');
+    // 恢复到当前章节/简介；若还未上传文件则显示上传区
+    if (!rawText) {
+      uploader.style.display = '';
+      return;
+    }
+    if (state.currentId === PREFACE_ID) showPreface();
+    else if (state.currentId && state.currentId.indexOf('chapter-') === 0) {
+      showChapter(parseInt(state.currentId.replace('chapter-', ''), 10));
+    } else if (state.chapters.length) {
+      showChapter(0);
+    }
+    // 覆盖 showChapter 的置顶，恢复 TXT 上次阅读位置
+    articleContent.scrollTop = txtScrollTop;
+  }
+
+  modeSwitch.addEventListener('click', function () {
+    if (isOriginalMode) showTxt(); else showOriginal();
+  });
+
+  /* ===================== 正文区域点击切换 ===================== */
+
+  (function initContentClickToggle() {
+    var downX = 0, downY = 0;
+
+    articleContent.addEventListener('mousedown', function (e) {
+      downX = e.clientX; downY = e.clientY;
+    });
+
+    articleContent.addEventListener('click', function (e) {
+      // 未上传文件（上传态）：不切换，让选文件交互正常工作
+      if (!rawText) return;
+      // 点击按钮/链接/输入框（如上一章/下一章）：不切换
+      if (e.target.closest('button, a, input, textarea')) return;
+      // 拖动选中文字：不切换
+      if (Math.abs(e.clientX - downX) > 5 || Math.abs(e.clientY - downY) > 5) return;
+      if (window.getSelection && String(window.getSelection()).length > 0) return;
+      // 切换原文 / TXT
+      if (isOriginalMode) showTxt(); else showOriginal();
+    });
+  })();
+
   /* ===================== 目录伸缩 / 展开 ===================== */
 
   tocToggle.addEventListener('click', function () {
@@ -426,6 +518,57 @@
 
   // 页面打开时自动恢复
   tryRestore();
+
+  /* ===================== 动态时间字段 ===================== */
+
+  (function initDynamicTime() {
+    var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
+    var now = new Date();
+    var year = now.getFullYear();
+    var month = now.getMonth() + 1;
+    var day = now.getDate();
+    // 计算当月第几周（第 1 天所在周往后数）
+    var weekOfMonth = Math.ceil(day / 7);
+    var cnMonth = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'][month - 1];
+
+    // 1. 文章发布/修改时间
+    var timeEls = document.querySelectorAll('.js-time');
+    for (var i = 0; i < timeEls.length; i++) {
+      var el = timeEls[i];
+      var offset = parseInt(el.getAttribute('data-offset') || '0', 10) * 1000;
+      var d = new Date(Date.now() + offset);
+      el.textContent = d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) +
+        ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+    }
+
+    // 2. 码龄
+    var ageEls = document.querySelectorAll('.js-coding-age');
+    for (var j = 0; j < ageEls.length; j++) {
+      var ageEl = ageEls[j];
+      var startYear = parseInt(ageEl.getAttribute('data-start') || '2016', 10);
+      ageEl.textContent = '码龄' + (year - startYear) + '年';
+    }
+
+    // 3. 周报标题：“AI周报（XXXX年X月第X周）”
+    var weeklyTitle = 'AI周报（' + year + '年' + month + '月第' + weekOfMonth + '周）：WAIC产业发布、Kimi K3开源、AI工具供应链警钟';
+    var titleEls = document.querySelectorAll('.js-weekly-title');
+    for (var k = 0; k < titleEls.length; k++) {
+      titleEls[k].textContent = weeklyTitle;
+    }
+    document.title = weeklyTitle + ' - CSDN 博客';
+
+    // 4. 话题标签：“#暑假·X月创作之星博客挑战赛”
+    var topicEls = document.querySelectorAll('.js-month-topic');
+    for (var m = 0; m < topicEls.length; m++) {
+      topicEls[m].textContent = '#暑假·' + cnMonth + '月创作之星博客挑战赛';
+    }
+
+    // 5. 含年份的文本（如 "WAIC 2026 ..."）→ 替换为当前年份
+    var yearEls = document.querySelectorAll('.js-year-text');
+    for (var n = 0; n < yearEls.length; n++) {
+      yearEls[n].textContent = yearEls[n].textContent.replace(/20\d{2}/, String(year));
+    }
+  })();
 
   /* ===================== 工具函数 ===================== */
 
