@@ -334,6 +334,58 @@ ul { list-style: none; }
 }
 .uploader-btn:hover { background: #e84a28; }
 
+/* ===== CSDN 原文静态内容排版 ===== */
+.original-article {
+  font-size: 15px;
+  line-height: 1.9;
+  color: #2c3e50;
+  word-break: break-word;
+}
+.original-article h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 28px 0 14px;
+  padding-left: 12px;
+  border-left: 4px solid #fc5531;
+  line-height: 1.5;
+}
+.original-article h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #333;
+  margin: 20px 0 10px;
+}
+.original-article p { margin: 0 0 12px; }
+.original-article ul,
+.original-article ol { margin: 0 0 14px; padding-left: 24px; }
+.original-article li { margin: 4px 0; }
+.original-article strong { color: #1a1a1a; }
+.original-article hr { border: none; border-top: 1px solid #eee; margin: 24px 0; }
+.original-article blockquote {
+  margin: 14px 0;
+  padding: 10px 14px;
+  background: #fff8f2;
+  border-left: 3px solid #fc9d6e;
+  color: #6b5847;
+  font-size: 14px;
+  border-radius: 0 4px 4px 0;
+}
+.original-article table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0;
+  font-size: 13px;
+}
+.original-article th,
+.original-article td {
+  border: 1px solid #e6e8eb;
+  padding: 8px 10px;
+  text-align: left;
+}
+.original-article th { background: #f7f8fa; font-weight: 600; color: #333; }
+.original-article tr:nth-child(even) td { background: #fafbfc; }
+
 /* ---------- 右侧栏：目录 / CSDN 卡片堆切换 ---------- */
 .col-right {
   position: relative;
@@ -365,8 +417,33 @@ ul { list-style: none; }
 }
 .toc-title { font-size: 16px; font-weight: 700; color: #222; }
 .toc-count { font-size: 12px; color: #999; }
+.toc-reimport {
+  margin-left: auto;
+  padding: 3px 9px;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  background: #fff;
+  color: #666;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all .15s;
+}
+.toc-reimport:hover { border-color: #fc5531; color: #fc5531; }
+
+/* 原文/TXT 切换标签（伪装成普通话题标签，不起眼） */
+.tag--switch {
+  cursor: pointer;
+  user-select: none;
+  transition: all .15s;
+}
+.tag--switch:hover { background: #ffe0cf; color: #c85a28; }
+.tag--switch-active {
+  background: #fc5531;
+  color: #fff;
+}
 .toc-toggle {
-  margin-left: auto; width: 26px; height: 26px; border: none; border-radius: 6px;
+  width: 26px; height: 26px; border: none; border-radius: 6px;
   background: #f5f6f8; color: #888; cursor: pointer; font-size: 13px; line-height: 1; transition: all .15s;
 }
 .toc-toggle:hover { background: #fc5531; color: #fff; }
