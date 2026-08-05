@@ -7,7 +7,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <title>AI周报（2026年7月第3周）：WAIC产业发布、Kimi K3开源、AI工具供应链警钟 - CSDN 博客</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23fc5531'/><text x='50%25' y='54%25' font-size='20' font-weight='bold' fill='white' font-family='Arial' text-anchor='middle' dominant-baseline='middle'>C</text></svg>">
-  <link rel="stylesheet" href="css/style.css?v=5">
+  <link rel="stylesheet" href="css/style.css?v=11">
 </head>
 <body>
   <!-- ===================== 顶部导航栏（静态，仿 CSDN） ===================== -->
@@ -51,7 +51,7 @@
             <div class="author-name">萧青山</div>
             <div class="author-badges">
               <span class="badge badge--level">🏆 博客等级</span>
-              <span class="badge badge--age">码龄10年</span>
+              <span class="badge badge--age js-coding-age" data-start="2016">码龄10年</span>
             </div>
           </div>
         </div>
@@ -93,7 +93,7 @@
             <span class="side-list-cnt">👁 1051</span>
           </li>
           <li>
-            <a class="active" href="javascript:void(0)">AI周报（2026年7月第3周）：WAIC产业发布、Kimi K3开源、AI工具供应链警钟</a>
+            <a class="active js-weekly-title" href="javascript:void(0)">AI周报（2026年7月第3周）：WAIC产业发布、Kimi K3开源、AI工具供应链警钟</a>
             <span class="side-list-cnt">👁 1079</span>
           </li>
           <li>
@@ -121,11 +121,11 @@
       <article class="article-card">
         <!-- 固定头部：滚动时始终显示 -->
         <div class="article-header">
-          <h1 class="article-title">AI周报（2026年7月第3周）：WAIC产业发布、Kimi K3开源、AI工具供应链警钟</h1>
+        <h1 class="article-title js-weekly-title">AI周报（2026年7月第3周）：WAIC产业发布、Kimi K3开源、AI工具供应链警钟</h1>
 
           <div class="article-meta">
             <span class="meta-badge">原创</span>
-            <span class="meta-item">已于 <b>2026-07-18 10:56:48</b> 修改</span>
+            <span class="meta-item">已于 <b class="js-time" data-offset="-3600"></b> 修改</span>
             <span class="meta-dot">·</span>
             <span class="meta-item">阅读量 <b>1k</b></span>
             <span class="meta-dot">·</span>
@@ -140,7 +140,8 @@
             <span class="tag tag--column">📘 AI周报</span>
             <span class="tag tag--column">📗 AI编程社区</span>
             <span class="tag-label">话题</span>
-            <span class="tag tag--topic">#暑假·七月创作之星博客挑战赛</span>
+            <span class="tag tag--topic js-month-topic">#暑假·七月创作之星博客挑战赛</span>
+            <span class="tag tag--topic tag--switch" id="modeSwitch" title="切换原文/TXT">#程序员基本功</span>
           </div>
 
           <!-- 专栏推广条 -->
@@ -174,6 +175,9 @@
             <span class="chapter-nav-pos" id="chapterPos"></span>
             <button class="chapter-nav-btn" id="nextBtn" type="button">下一章 →</button>
           </div>
+
+          <!-- CSDN 原文（写死静态内容，默认隐藏） -->
+          <div class="original-article" id="originalArticle" style="display:none"></div>
         </div>
       </article>
     </section>
@@ -185,6 +189,7 @@
         <div class="toc-head">
           <span class="toc-title">目录</span>
           <span class="toc-count" id="tocCount"></span>
+          <button class="toc-reimport" id="reimportBtn" type="button" title="选择其它 TXT 文件">↻ 重新导入</button>
           <button class="toc-toggle" id="tocToggle" type="button" title="收起目录">⟩</button>
         </div>
         <div class="toc-search">
@@ -217,7 +222,7 @@
         <div class="card list-card">
           <div class="card-title">相关推荐</div>
           <ul class="side-list">
-            <li><a href="javascript:void(0)">WAIC 2026 开幕：300+ AI 产品首发，三地四馆全景回顾</a><span class="side-list-cnt">👁 2.1k</span></li>
+            <li><a class="js-year-text" href="javascript:void(0)">WAIC 2026 开幕：300+ AI 产品首发，三地四馆全景回顾</a><span class="side-list-cnt">👁 2.1k</span></li>
             <li><a href="javascript:void(0)">Kimi K3 开源测评：2.8万亿参数背后的工程权衡</a><span class="side-list-cnt">👁 1.8k</span></li>
             <li><a href="javascript:void(0)">Claude Code 供应链安全事件：完整时间线与应对方案</a><span class="side-list-cnt">👁 1.5k</span></li>
             <li><a href="javascript:void(0)">J-space 论文考：AI 可解释性的新进展</a><span class="side-list-cnt">👁 1.3k</span></li>
@@ -251,7 +256,8 @@
     </aside>
   </div>
 
-  <script src="js/parser.js?v=5"></script>
-  <script src="js/app.js?v=5"></script>
+  <script src="js/parser.js?v=11"></script>
+  <script src="js/original-article.js?v=11"></script>
+  <script src="js/app.js?v=11"></script>
 </body>
 </html>
